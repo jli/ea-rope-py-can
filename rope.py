@@ -1,9 +1,12 @@
+from typing import Any, Dict, List, Optional
+
+
 class Rope:
-  def __init__(self, text):
-    self.text = text
-    self.size = len(text)
-    self.left = None
-    self.right = None
+  def __init__(self, text: str):
+    self.text: str = text
+    self.size: int = len(text)
+    self.left: Optional[Rope] = None
+    self.right: Optional[Rope] = None
 
   # prints contents including showing the hierarchy
   # it's not required for this function to work, it's just there to help with debugging
@@ -13,42 +16,42 @@ class Rope:
   # -DEF
   # ABC
   # -GHI
-  def to_string_debug(self, indentLevel = 0):
+  def to_string_debug(self, indentLevel: int = 0) -> str:
     leftText = self.left.to_string_debug(indentLevel + 1) if self.left else ''
     rightText = self.right.to_string_debug(indentLevel + 1) if self.right else ''
     return leftText + ('-'*indentLevel) + self.text + '\n' + rightText
 
   # just prints the stored text
-  def to_string(self):
+  def to_string(self) -> str:
     leftText =  self.left.to_string() if self.left else  ''
     rightText = self.right.to_string() if self.right else  ''
     return leftText + self.text + rightText
 
   # How long the text stored is in all of the children combined
   # This is the same as this.to_string().length
-  def total_size(self):
+  def total_size(self) -> int:
     leftText =  self.left.total_size() if self.left else  0
     rightText = self.right.total_size() if self.right else  0
     return leftText + self.size + rightText
 
   # how deep the tree is (I.e. the maximum depth of children)
-  def depth(self):
+  def depth(self) -> int:
     return 1 + max(self.left_depth(), self.right_depth())
 
   # Whether the rope is balanced, i.e. whether any subtrees have branches
   # which differ by more than one in depth.
-  def is_balanced(self):
+  def is_balanced(self) -> bool:
     leftBalanced =  self.left.is_balanced() if self.left else True
     rightBalanced = self.right.is_balanced() if self.right else True
 
     return leftBalanced and rightBalanced and abs(self.left_depth() - self.right_depth()) < 2
 
-  def left_depth(self):
+  def left_depth(self) -> int:
     if (not self.left):
       return 0
     return self.left.depth()
 
-  def right_depth(self):
+  def right_depth(self) -> int:
     if (not self.right):
       return 0
     return self.right.depth()
@@ -56,8 +59,8 @@ class Rope:
   # Helper method which converts the rope into an associative array
   #
   # Only used for debugging, this has no functional purpose
-  def to_dictionary(self):
-    mapVersion = {
+  def to_dictionary(self) -> Dict[str, Any]:
+    mapVersion: Dict[str, Any] = {
       'text': self.text
     }
     if (self.right):
@@ -66,7 +69,7 @@ class Rope:
       mapVersion['left'] = self.left.to_dictionary()
     return mapVersion
 
-def create_rope_from_map(map):
+def create_rope_from_map(map: Dict[str, Any]) -> Rope:
   rope = Rope(map['text'])
   if 'left' in map:
     rope.left = create_rope_from_map(map['left'])
@@ -74,7 +77,7 @@ def create_rope_from_map(map):
     rope.right = create_rope_from_map(map['right'])
   return rope
 
-def prepend(rope, text):
+def prepend(rope: Rope, text: str) -> Rope:
   if (rope.left):
     prepend(rope.left, text)
   else:
@@ -82,7 +85,7 @@ def prepend(rope, text):
 
   return rope
 
-def append(rope, text):
+def append(rope: Rope, text: str) -> Rope:
   if (rope.right):
     append(rope.right, text)
   else:
@@ -92,19 +95,19 @@ def append(rope, text):
 
 # This is an internal API. You can implement it however you want.
 # (E.g. you can choose to mutate the input rope or not)
-def split_at(rope, position):
+def split_at(rope: Rope, position: int) -> List:
   # TODO
-  return [newLeft, right]
+  return [] # [newLeft, right]
 
-def delete_range(rope, start, end):
-  # TODO
-  return rope
-
-def insert(rope, text, location):
+def delete_range(rope: Rope, start: int, end: int) -> Rope:
   # TODO
   return rope
 
-def rebalance(rope):
+def insert(rope: Rope, text: str, location: int) -> Rope:
+  # TODO
+  return rope
+
+def rebalance(rope: Rope) -> Rope:
   # TODO
   return rope
 
@@ -123,7 +126,8 @@ def rebalance(rope):
   /
 a
 '''
-def rotate_left(rope):
+def rotate_left(rope: Rope) -> Rope:
+  assert rope.right is not None
   newParent = rope.right
   newLeft = rope
   newLeft.right = newParent.left
@@ -146,7 +150,8 @@ def rotate_left(rope):
         \
          c
 '''
-def rotate_right(rope):
+def rotate_right(rope: Rope) -> Rope:
+  assert rope.left is not None
   newParent = rope.left
   newRight = rope
   newRight.left = newParent.right
