@@ -7,8 +7,8 @@ class Rope:
 
   # prints contents including showing the hierarchy
   # it's not required for this function to work, it's just there to help with debugging
-  # 
-  # e.g. if the  root node has ABC, the left node has DEF, and the right node has GHI, 
+  #
+  # e.g. if the  root node has ABC, the left node has DEF, and the right node has GHI,
   # the output will look like:
   # -DEF
   # ABC
@@ -29,32 +29,32 @@ class Rope:
   def total_size(self):
     leftText =  self.left.total_size() if self.left else  0
     rightText = self.right.total_size() if self.right else  0
-    return leftText + this.text.length + rightText
+    return leftText + self.size + rightText
 
   # how deep the tree is (I.e. the maximum depth of children)
   def depth(self):
     return 1 + max(self.left_depth(), self.right_depth())
 
   # Whether the rope is balanced, i.e. whether any subtrees have branches
-  # which differ by more than one in depth. 
-  def is_balanced(self): 
+  # which differ by more than one in depth.
+  def is_balanced(self):
     leftBalanced =  self.left.is_balanced() if self.left else True
     rightBalanced = self.right.is_balanced() if self.right else True
 
     return leftBalanced and rightBalanced and abs(self.left_depth() - self.right_depth()) < 2
 
-  def left_depth(self): 
-    if (not self.left): 
+  def left_depth(self):
+    if (not self.left):
       return 0
     return self.left.depth()
 
-  def right_depth(self): 
-    if (not self.right): 
+  def right_depth(self):
+    if (not self.right):
       return 0
     return self.right.depth()
 
   # Helper method which converts the rope into an associative array
-  # 
+  #
   # Only used for debugging, this has no functional purpose
   def to_dictionary(self):
     mapVersion = {
@@ -66,31 +66,31 @@ class Rope:
       mapVersion['left'] = self.left.to_dictionary()
     return mapVersion
 
-def create_rope_from_map(map): 
+def create_rope_from_map(map):
   rope = Rope(map['text'])
-  if 'left' in map: 
+  if 'left' in map:
     rope.left = create_rope_from_map(map['left'])
-  if 'right' in map: 
+  if 'right' in map:
     rope.right = create_rope_from_map(map['right'])
   return rope
 
-def prepend(rope, text): 
+def prepend(rope, text):
   if (rope.left):
     prepend(rope.left, text)
   else:
     rope.left = Rope(text)
-  
+
   return rope
 
-def append(rope, text): 
+def append(rope, text):
   if (rope.right):
     append(rope.right, text)
   else:
     rope.right = Rope(text)
-  
+
   return rope
 
-# This is an internal API. You can implement it however you want. 
+# This is an internal API. You can implement it however you want.
 # (E.g. you can choose to mutate the input rope or not)
 def split_at(rope, position):
   # TODO
@@ -100,7 +100,7 @@ def delete_range(rope, start, end):
   # TODO
   return rope
 
-def insert(rope, text, location): 
+def insert(rope, text, location):
   # TODO
   return rope
 
@@ -144,7 +144,7 @@ def rotate_left(rope):
       \
        b
         \
-         c 
+         c
 '''
 def rotate_right(rope):
   newParent = rope.left

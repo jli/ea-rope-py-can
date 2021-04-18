@@ -8,6 +8,7 @@ class Testing(unittest.TestCase):
         self.assertEqual(Rope('test').to_string(), 'test')
         self.assertEqual(prepend(Rope('test'), 'abc').to_string(), 'abctest')
         self.assertEqual(append(Rope('test'), 'abc').to_string(), 'testabc')
+        self.assertEqual(append(Rope('test'), 'abc').total_size(), 7)
 
     def test_deletion(self):
         self.assertEqual(delete_range(Rope('test'), 1, 2).to_string(), 'tst')
