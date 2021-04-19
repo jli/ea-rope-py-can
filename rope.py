@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 
 class Rope:
@@ -100,8 +100,36 @@ def split_at(rope: Rope, position: int) -> List:
   return [] # [newLeft, right]
 
 def delete_range(rope: Rope, start: int, end: int) -> Rope:
-  # TODO
+  left_size = 0 if rope.left is None else rope.left.total_size()
+  right_size = 0 if rope.right is None else rope.right.total_size()
+  mid_range_end = left_size + rope.size
+  # print(f"DR top. {start=}, {end=}, rope:\n", rope.to_string_debug(), sep='')
+  # print(f"DR top. {left_size=}, {mid_range_end=}, {right_size=}")
+
+  if rope.left and intersects((start, end), (0, left_size)):
+    # print(f"intersects left.. ({rope.left.to_string()})")
+    rope.left = delete_range(rope.left, start, end)
+    # print(f"..intersects left. new: {rope.left.to_string()}")
+
+  if intersects((start, end), (left_size, mid_range_end)):
+    # print(f"rope.text[:{start - left_size}] + rope.text[{end - left_size}:]")
+    # Note: max sets lower bound of 0 to avoid wrapping around
+    rope.text = rope.text[:max(start - left_size, 0)] + rope.text[end - left_size:]
+    # print(f"intersects mid. new {rope.text=}")
+    rope.size = len(rope.text)
+
+  if rope.right and intersects((start, end), (mid_range_end, mid_range_end + right_size)):
+    # print(f"intersects right.. ({rope.right.to_string()})")
+    rope.right = delete_range(rope.right, start - mid_range_end, end - mid_range_end)
+    # print(f"..intersects right. new: {rope.right.to_string()}")
+
   return rope
+
+def intersects(r1: Tuple[int, int], r2: Tuple[int, int]) -> bool:
+  # r1 ends before r2 begins, or r2 ends before r1 begins
+  if r1[1] < r2[0] or r2[1] < r1[0]:
+    return False
+  return True
 
 def insert(rope: Rope, text: str, location: int) -> Rope:
   # TODO

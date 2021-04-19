@@ -2,6 +2,17 @@ from rope import (Rope, prepend, append, delete_range, insert,
                   create_rope_from_map, rotate_left, rotate_right, rebalance)
 import unittest
 
+
+def make_deep_rope() -> Rope:
+    deep_rope = Rope('345')
+    prepend(deep_rope, '012')
+    deep_rope.right = Rope('7')
+    prepend(deep_rope.right, '6')
+    append(deep_rope.right, '8')
+    append(deep_rope.right, '9')
+    return deep_rope
+
+
 # These tests are here as a starting point, they are not comprehensive
 class Testing(unittest.TestCase):
     def test_rope_basics(self) -> None:
@@ -14,6 +25,21 @@ class Testing(unittest.TestCase):
         self.assertEqual(delete_range(Rope('test'), 1, 2).to_string(), 'tst')
         self.assertEqual(delete_range(Rope('test'), 2, 4).to_string(), 'te')
         self.assertEqual(delete_range(Rope('test'), 0, 2).to_string(), 'st')
+
+    def test_deletion_deeper(self) -> None:
+        # TODO: use parametrized here.
+        rope = make_deep_rope()
+        self.assertEqual(delete_range(rope, 0, 2).to_string(), '23456789')
+        rope = make_deep_rope()
+        self.assertEqual(delete_range(rope, 0, 4).to_string(), '456789')
+        rope = make_deep_rope()
+        self.assertEqual(delete_range(rope, 0, 9).to_string(), '9')
+        rope = make_deep_rope()
+        self.assertEqual(delete_range(rope, 0, 100).to_string(), '')
+        rope = make_deep_rope()
+        self.assertEqual(delete_range(rope, 4, 7).to_string(), '0123789')
+        rope = make_deep_rope()
+        self.assertEqual(delete_range(rope, 2, 8).to_string(), '0189')
 
     def test_insertion(self) -> None:
         self.assertEqual(insert(Rope('test'), '123', 2).to_string(), 'te123st')
