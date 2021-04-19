@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Optional, Tuple
 class Rope:
   def __init__(self, text: str):
     self.text: str = text
+    # TODO: use property setter for text to set size to enforce consistency.
     self.size: int = len(text)
     self.left: Optional[Rope] = None
     self.right: Optional[Rope] = None
@@ -95,9 +96,24 @@ def append(rope: Rope, text: str) -> Rope:
 
 # This is an internal API. You can implement it however you want.
 # (E.g. you can choose to mutate the input rope or not)
-def split_at(rope: Rope, position: int) -> List:
-  # TODO
-  return [] # [newLeft, right]
+def split_at(rope: Rope, position: int) -> None:
+  """Splits rope text at position, moving left and right pieces into child
+  ropes and clearing rope's own text."""
+  # print(f"split_at({position=}) top")
+  left_bit = rope.text[:position]
+  right_bit = rope.text[position:]
+  # print(f"split_at({position=}). {left_bit=} {right_bit=}")
+  if rope.left:
+    append(rope.left, left_bit)
+  else:
+    rope.left = Rope(left_bit)
+  if rope.right:
+    prepend(rope.right, right_bit)
+  else:
+    rope.right = Rope(right_bit)
+
+  rope.text = ''
+  rope.size = 0
 
 def delete_range(rope: Rope, start: int, end: int) -> Rope:
   left_size = 0 if rope.left is None else rope.left.total_size()
@@ -132,7 +148,27 @@ def intersects(r1: Tuple[int, int], r2: Tuple[int, int]) -> bool:
   return True
 
 def insert(rope: Rope, text: str, location: int) -> Rope:
-  # TODO
+  left_size = 0 if rope.left is None else rope.left.total_size()
+  mid_range_end = left_size + rope.size
+  # print(f"I top. {location=}, rope:\n", rope.to_string_debug(), sep='')
+  # print(f"I top. {left_size=}, {mid_range_end=}")
+
+  if location <= left_size:
+    if rope.left:
+      insert(rope.left, text, location)
+    else:
+      rope.left = Rope(text)
+  elif left_size < location < mid_range_end:
+    mid_location = location - left_size
+    split_at(rope, mid_location)
+    rope.text = text
+    rope.size = len(text)
+  else:
+    if rope.right:
+      right_location = location - mid_range_end
+      insert(rope.right, text, right_location)
+    else:
+      rope.right = Rope(text)
   return rope
 
 def rebalance(rope: Rope) -> Rope:

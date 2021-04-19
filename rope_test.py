@@ -46,6 +46,15 @@ class Testing(unittest.TestCase):
         self.assertEqual(insert(Rope('test'), '123', 4).to_string(), 'test123')
         self.assertEqual(insert(Rope('test'), '123', 0).to_string(), '123test')
 
+    def test_insertion_deeper(self) -> None:
+        self.assertEqual(insert(make_deep_rope(), 'XYZ', 0).to_string(), 'XYZ0123456789')
+        self.assertEqual(insert(make_deep_rope(), 'XYZ', 2).to_string(), '01XYZ23456789')
+        self.assertEqual(insert(make_deep_rope(), 'XYZ', 4).to_string(), '0123XYZ456789')
+        self.assertEqual(insert(make_deep_rope(), 'XYZ', 7).to_string(), '0123456XYZ789')
+        self.assertEqual(insert(make_deep_rope(), 'XYZ', 9).to_string(), '012345678XYZ9')
+        self.assertEqual(insert(make_deep_rope(), 'XYZ', 10).to_string(), '0123456789XYZ')
+        self.assertEqual(insert(make_deep_rope(), 'XYZ', 100).to_string(), '0123456789XYZ')
+
     # def test_extra_credit_rebalancing(self):
     #   self.assertEqual(rotate_left(create_rope_from_map({
     #     'text': '3',
