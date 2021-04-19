@@ -172,7 +172,27 @@ def insert(rope: Rope, text: str, location: int) -> Rope:
   return rope
 
 def rebalance(rope: Rope) -> Rope:
-  # TODO
+  if rope.is_balanced():
+    return rope
+
+  # TODO: this happens to pass existing tests, but i'm not confident this is
+  # fully general.
+  while rope.left_depth() - rope.right_depth() > 1:
+    assert rope.left is not None
+    if rope.left.right_depth() > rope.left.left_depth():
+      rope.left = rotate_left(rope.left)
+    rope = rotate_right(rope)
+  while rope.right_depth() - rope.left_depth() > 1:
+    assert rope.right is not None
+    if rope.right.left_depth() > rope.right.right_depth():
+      rope.right = rotate_right(rope.right)
+    rope = rotate_left(rope)
+
+  if rope.left:
+    rebalance(rope.left)
+  if rope.right:
+    rebalance(rope.right)
+
   return rope
 
 '''

@@ -55,64 +55,65 @@ class Testing(unittest.TestCase):
         self.assertEqual(insert(make_deep_rope(), 'XYZ', 10).to_string(), '0123456789XYZ')
         self.assertEqual(insert(make_deep_rope(), 'XYZ', 100).to_string(), '0123456789XYZ')
 
-    # def test_extra_credit_rebalancing(self):
-    #   self.assertEqual(rotate_left(create_rope_from_map({
-    #     'text': '3',
-    #     'left': { 'text': 'a' },
-    #     'right': { 'text': '5', 'left': { 'text': 'b' }, 'right': { 'text': '7', 'left': { 'text': 'c' }, 'right': { 'text': 'd' } } },
-    #   })).to_dictionary(), {
-    #     'text': '5',
-    #     'left': {
-    #       'text': '3',
-    #       'left': { 'text': 'a' },
-    #       'right': { 'text': 'b' }
-    #     },
-    #     'right': {
-    #       'text': '7',
-    #       'left': { 'text': 'c' },
-    #       'right': { 'text': 'd' }
-    #     },
-    #   })
-    #   self.assertEqual(rotate_right(create_rope_from_map({
-    #     'text': '5',
-    #     'left': { 'text': '3', 'right': { 'text': 'b' }, 'left': { 'text': '2', 'left': { 'text': 'd' }, 'right': { 'text': 'c' } } },
-    #     'right': { 'text': 'a' },
-    #   })).to_dictionary(), {
-    #     'text': '3',
-    #     'left': {
-    #       'text': '2',
-    #       'left': { 'text': 'd' },
-    #       'right': { 'text': 'c' }
-    #     },
-    #     'right': {
-    #       'text': '5',
-    #       'left': { 'text': 'b' },
-    #       'right': { 'text': 'a' }
-    #     },
-    #   })
+    def test_extra_credit_rebalancing(self) -> None:
+      self.assertEqual(rotate_left(create_rope_from_map({
+        'text': '3',
+        'left': { 'text': 'a' },
+        'right': { 'text': '5', 'left': { 'text': 'b' }, 'right': { 'text': '7', 'left': { 'text': 'c' }, 'right': { 'text': 'd' } } },
+      })).to_dictionary(), {
+        'text': '5',
+        'left': {
+          'text': '3',
+          'left': { 'text': 'a' },
+          'right': { 'text': 'b' }
+        },
+        'right': {
+          'text': '7',
+          'left': { 'text': 'c' },
+          'right': { 'text': 'd' }
+        },
+      })
+      self.assertEqual(rotate_right(create_rope_from_map({
+        'text': '5',
+        'left': { 'text': '3', 'right': { 'text': 'b' }, 'left': { 'text': '2', 'left': { 'text': 'd' }, 'right': { 'text': 'c' } } },
+        'right': { 'text': 'a' },
+      })).to_dictionary(), {
+        'text': '3',
+        'left': {
+          'text': '2',
+          'left': { 'text': 'd' },
+          'right': { 'text': 'c' }
+        },
+        'right': {
+          'text': '5',
+          'left': { 'text': 'b' },
+          'right': { 'text': 'a' }
+        },
+      })
 
-    #   balancedTree = {
-    #     'text': 'b',
-    #     'left': { 'text': 'a' },
-    #     'right': { 'text': 'c' }
-    #   }
+      balancedTree = {
+        'text': 'b',
+        'left': { 'text': 'a' },
+        'right': { 'text': 'c' }
+      }
 
-    #   self.assertEqual(rebalance(create_rope_from_map({
-    #     'text': 'c',
-    #     'left': { 'text': 'a', 'right': { 'text': 'b' } },
-    #   })).to_dictionary(), balancedTree)
-    #   self.assertEqual(rebalance(create_rope_from_map({
-    #     'text': 'c',
-    #     'left': { 'text': 'b', 'left': { 'text': 'a' } },
-    #   })).to_dictionary(), balancedTree)
-    #   self.assertEqual(rebalance(create_rope_from_map({
-    #     'text': 'a',
-    #     'right': { 'text': 'b', 'right': { 'text': 'c' } },
-    #   })).to_dictionary(), balancedTree)
-    #   self.assertEqual(rebalance(create_rope_from_map({
-    #     'text': 'a',
-    #     'right': { 'text': 'c', 'left': { 'text': 'b' } },
-    #   })).to_dictionary(), balancedTree)
+      self.assertEqual(rebalance(create_rope_from_map({
+        'text': 'c',
+        'left': { 'text': 'a', 'right': { 'text': 'b' } },
+      })).to_dictionary(), balancedTree)
+      self.assertEqual(rebalance(create_rope_from_map({
+        'text': 'c',
+        'left': { 'text': 'b', 'left': { 'text': 'a' } },
+      })).to_dictionary(), balancedTree)
+      self.assertEqual(rebalance(create_rope_from_map({
+        'text': 'a',
+        'right': { 'text': 'b', 'right': { 'text': 'c' } },
+      })).to_dictionary(), balancedTree)
+      self.assertEqual(rebalance(create_rope_from_map({
+        'text': 'a',
+        'right': { 'text': 'c', 'left': { 'text': 'b' } },
+      })).to_dictionary(), balancedTree)
+
 
 if __name__ == '__main__':
     unittest.main()
